@@ -5,6 +5,8 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_LEDBackpack.h"
 
+#include "StateCooking.h"
+
 // --------------------- Sounds ------------------------------
 // Note - using pin 11
 #include"sounds.h"
@@ -38,19 +40,18 @@ const byte stopButtonPin = 3;
 int startButtonState = 0;         // variable for reading the pushbutton status
 int stopButtonState = 0;         // variable for reading the pushbutton status
 
-// ---------------- Time keeping -------------------------
-
 // ---------------- Init and main loop -------------------------
 void setup(){
   Serial.begin(9600);
 
+  // Timer0 is already used for millis() - we'll just interrupt somewhere
+  // in the middle and call the "Compare A" function below
+  OCR0A = 0xAF;
+  TIMSK0 |= _BV(OCIE0A);
+
   // Init interrupts
   pinMode(startButtonPin, INPUT_PULLUP);
   pinMode(stopButtonPin, INPUT_PULLUP);
-
-  //TODO-only enable interrupts when going to sleep
-  //attachInterrupt(digitalPinToInterrupt(startButtonPin), wakeup, CHANGE);  
-  //attachInterrupt(digitalPinToInterrupt(stopButtonPin), wakeup, CHANGE);  
 
   // Init 7-segment
   matrix.begin(0x70);  // pass in the address
@@ -61,6 +62,7 @@ void setup(){
 }
   
 void loop(){
+  /*
   // read keypad
   char key = keypad.getKey();
   
@@ -83,54 +85,30 @@ void loop(){
     delay(500); // a simple "debouncing". Replace with proper one
   } else {
   }
-
+  */
 }
+
+// ----------------- Sleep and wake up-----------------
+void sleep() {
+  //TODO-only enable interrupts when going to sleep
+  //attachInterrupt(digitalPinToInterrupt(startButtonPin), wakeup, CHANGE);  
+  //attachInterrupt(digitalPinToInterrupt(stopButtonPin), wakeup, CHANGE);  
+}
+
 
 void wakeup() {
+  //TODO-disable button interrupts
 }
 
-// ----------------- countdown -----------------
-class Flasher
+// ----------------- Timer -----------------
+StateCooking stateCooking();
+
+// Interrupt is called once a millisecond, looks for any new GPS data, and stores it
+SIGNAL(TIMER0_COMPA_vect) 
 {
-  // Class Member Variables
-  // These are initialized at startup
-  int ledPin;      // the number of the LED pin
-  long OnTime;     // milliseconds of on-time
-  long OffTime;    // milliseconds of off-time
- 
-  // These maintain the current state
-  int ledState;                 // ledState used to set the LED
-  unsigned long previousMillis;   // will store last time LED was updated
- 
-  // Constructor - creates a Flasher 
-  // and initializes the member variables and state
-  public:
-  Flasher(int pin, long on, long off)
-  {
-  ledPin = pin;
-  pinMode(ledPin, OUTPUT);     
-    
-  OnTime = on;
-  OffTime = off;
-  
-  ledState = LOW; 
-  previousMillis = 0;
-  }
- 
-  void Update(unsigned long currentMillis)
-  {
-    if((ledState == HIGH) && (currentMillis - previousMillis >= OnTime))
-    {
-      ledState = LOW;  // Turn it off
-      previousMillis = currentMillis;  // Remember the time
-      digitalWrite(ledPin, ledState);  // Update the actual LED
-    }
-    else if ((ledState == LOW) && (currentMillis - previousMillis >= OffTime))
-    {
-      ledState = HIGH;  // turn it on
-      previousMillis = currentMillis;   // Remember the time
-      digitalWrite(ledPin, ledState);   // Update the actual LED
-    }
-  }
-};
+  unsigned long currentMillis = millis();
+
+  //call states (based on which state is on now)
+  stateCooking.Update(currentMillis);
+}
 

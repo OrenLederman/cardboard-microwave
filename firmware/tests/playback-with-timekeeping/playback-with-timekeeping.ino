@@ -32,7 +32,7 @@ class Countdown
 
 class MusicRepeat
 {
-  int soundLengthMs; // the length of each tick  
+  int soundLengthMs; // the length of music track  
   boolean playOn = true;
   unsigned long previousMillis;   // will store last time this was updated
  
