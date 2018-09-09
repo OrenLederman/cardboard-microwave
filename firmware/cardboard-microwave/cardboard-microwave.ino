@@ -41,6 +41,9 @@ int startButtonState = 0;         // variable for reading the pushbutton status
 int stopButtonState = 0;         // variable for reading the pushbutton status
 
 // ---------------- Init and main loop -------------------------
+StateCooking stateCooking;
+
+
 void setup(){
   Serial.begin(9600);
 
@@ -57,7 +60,9 @@ void setup(){
   matrix.begin(0x70);  // pass in the address
   matrix.print(10000, DEC);
   matrix.writeDisplay();
-  
+
+  //
+  stateCooking.reset(100);
   delay(500);
 }
   
@@ -101,8 +106,6 @@ void wakeup() {
 }
 
 // ----------------- Timer -----------------
-StateCooking stateCooking(100);
-
 // Interrupt is called once a millisecond, looks for any new GPS data, and stores it
 SIGNAL(TIMER0_COMPA_vect) 
 {

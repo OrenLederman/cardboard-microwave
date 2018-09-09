@@ -6,22 +6,26 @@
 // Timers based on - https://learn.adafruit.com/multi-tasking-the-arduino-part-2/timers 
 
 
-Countdown::Countdown(int tickLengthMsInit, int ticksRemainingInit) 
+Countdown::Countdown() 
 {
-    ticksRemaining = ticksRemainingInit;
-    tickLengthMs = tickLengthMsInit;
-    previousMillis = 0;
+    _previousMillis = 0;
+    _tickLengthMs = TICK_LENGTH_MS;
 };
  
 void Countdown::Update(unsigned long currentMillis)
 {
-    if((ticksRemaining > 0) && (currentMillis - previousMillis >= tickLengthMs))
+    if((_ticksRemaining  > 0) && (currentMillis - _previousMillis >= _tickLengthMs))
     {
-      previousMillis = currentMillis;  // Remember the time
-      ticksRemaining = ticksRemaining - 1;
-      Serial.println(ticksRemaining);
+      _previousMillis = currentMillis;  // Remember the time
+      _ticksRemaining  = _ticksRemaining  - 1;
+      Serial.println(_ticksRemaining );
     }
 };
+
+void Countdown::setTicksRemaining(int ticksRemaining)
+{
+  _ticksRemaining = ticksRemaining;
+}
 
 CookingMusicRepeat::CookingMusicRepeat() 
 {
@@ -46,7 +50,7 @@ void CookingMusicRepeat::stopMusic()
     stopPlayback();
 };
 
-StateCooking::StateCooking(int ticks) : cdown(TICK_LENGTH_MS,ticks) {};
+StateCooking::StateCooking() {};
 
 void StateCooking::Update(unsigned long currentMillis)
 {
@@ -58,4 +62,8 @@ void StateCooking::Update(unsigned long currentMillis)
       // beep X times
       // switch to other state
 };
+
+void StateCooking::reset(int ticksRemaining) {
+  cdown.setTicksRemaining(ticksRemaining);
+}
 
