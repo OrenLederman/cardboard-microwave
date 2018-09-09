@@ -32,7 +32,7 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, rows, cols );
 #endif
 
 
-Adafruit_7segment matrix = Adafruit_7segment();
+Adafruit_7segment clockDisplay = Adafruit_7segment();
 
 // ---------------- Buttons & Interrupts -------------------------
 const byte startButtonPin = 2;
@@ -62,11 +62,14 @@ void setup(){
   matrix.writeDisplay();
 
   //
-  stateCooking.reset(100);
+  stateCooking.start(100);
   delay(500);
 }
   
 void loop(){
+  // Loop is mostly empty. Using TIMER0 to schedule events (see function below)
+
+
   /*
   // read keypad
   char key = keypad.getKey();
@@ -106,7 +109,7 @@ void wakeup() {
 }
 
 // ----------------- Timer -----------------
-// Interrupt is called once a millisecond, looks for any new GPS data, and stores it
+// Interrupt is called once a millisecond. See - https://learn.adafruit.com/multi-tasking-the-arduino-part-2/timers 
 SIGNAL(TIMER0_COMPA_vect) 
 {
   unsigned long currentMillis = millis();

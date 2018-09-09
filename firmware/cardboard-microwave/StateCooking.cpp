@@ -27,6 +27,11 @@ void Countdown::setTicksRemaining(int ticksRemaining)
   _ticksRemaining = ticksRemaining;
 }
 
+int Countdown::getTicksRemaining()
+{
+    return _ticksRemaining;
+}
+
 CookingMusicRepeat::CookingMusicRepeat() 
 {
     soundLengthMs = sizeof(sound_cooking)/8000;
@@ -43,6 +48,12 @@ void CookingMusicRepeat::Update(unsigned long currentMillis)
     }
 };
 
+void CookingMusicRepeat::startMusic()
+{
+    Serial.println("Starting music");
+    playOn = true;
+};
+
 void CookingMusicRepeat::stopMusic()
 {
     Serial.println("Stopped music");
@@ -57,13 +68,36 @@ void StateCooking::Update(unsigned long currentMillis)
       cdown.Update(currentMillis);
       cookingMusicRepeat.Update(currentMillis);    
   
+
       // when countdown is over, stop music, beep X times, and end state
       //cookingMusicRepeat.stopMusic();
       // beep X times
       // switch to other state
+      if (cdown.getTicksRemaining == 0) 
+      {
+        cookingMusicRepeat.stopMusic();
+          
+        // beep x times
+        for (int i=0; i <  NUMBER_OF_COMPLETE_BEEPS; i++) {
+            startPlayback(sound_cooking, sizeof(sound_complete));
+            delay(TIME_BETWEEN_COMPLETE_BEEPS_MS);
+        }
+
+        _done = true;
+      }
 };
 
-void StateCooking::reset(int ticksRemaining) {
+void StateCooking::start(int ticksRemaining) {
   cdown.setTicksRemaining(ticksRemaining);
+  cookingMusicRepeat.startMusic();
+  _done = false;
 }
 
+void StateCooking::stop() {
+    cdown.setTicksRemaining(0);
+    cookingMusicRepeat.stopMusic();
+}
+
+void StateCooking::isDone() {
+    return _done;
+}
