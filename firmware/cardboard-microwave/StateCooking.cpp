@@ -16,15 +16,15 @@ void Countdown::Update(unsigned long currentMillis)
 {
     if((_ticksRemaining  > 0) && (currentMillis - _previousMillis >= _tickLengthMs))
     {
-      _previousMillis = currentMillis;  // Remember the time
-      _ticksRemaining  = _ticksRemaining  - 1;
-      Serial.println(_ticksRemaining );
+        _previousMillis = currentMillis;  // Remember the time
+        _ticksRemaining  = _ticksRemaining  - 1;
+        Serial.println(_ticksRemaining );
     }
 };
 
 void Countdown::setTicksRemaining(int ticksRemaining)
 {
-  _ticksRemaining = ticksRemaining;
+    _ticksRemaining = ticksRemaining;
 }
 
 int Countdown::getTicksRemaining()
@@ -42,9 +42,9 @@ void CookingMusicRepeat::Update(unsigned long currentMillis)
 {
     if((playOn) && (currentMillis - previousMillis >= soundLengthMs))
     {
-      previousMillis = currentMillis;  // Remember the time
-      startPlayback(sound_cooking, sizeof(sound_cooking));
-      Serial.println("Starting music");
+        previousMillis = currentMillis;  // Remember the time
+        startPlayback(sound_cooking, sizeof(sound_cooking));
+        Serial.println("Starting music");
     }
 };
 
@@ -65,16 +65,13 @@ StateCooking::StateCooking() {};
 
 void StateCooking::Update(unsigned long currentMillis)
 {
-      cdown.Update(currentMillis);
-      cookingMusicRepeat.Update(currentMillis);    
+    cdown.Update(currentMillis);
+    cookingMusicRepeat.Update(currentMillis);    
   
 
-      // when countdown is over, stop music, beep X times, and end state
-      //cookingMusicRepeat.stopMusic();
-      // beep X times
-      // switch to other state
-      if (cdown.getTicksRemaining == 0) 
-      {
+    // when countdown is over, stop music, beep X times, and end state
+    if (cdown.getTicksRemaining() == 0) 
+    {
         cookingMusicRepeat.stopMusic();
           
         // beep x times
@@ -84,20 +81,21 @@ void StateCooking::Update(unsigned long currentMillis)
         }
 
         _done = true;
-      }
+    }
 };
 
 void StateCooking::start(int ticksRemaining) {
-  cdown.setTicksRemaining(ticksRemaining);
-  cookingMusicRepeat.startMusic();
-  _done = false;
+    cdown.setTicksRemaining(ticksRemaining);
+    cookingMusicRepeat.startMusic();
+    _done = false;
 }
 
 void StateCooking::stop() {
     cdown.setTicksRemaining(0);
     cookingMusicRepeat.stopMusic();
+    _done = true;    
 }
 
-void StateCooking::isDone() {
+boolean StateCooking::isDone() {
     return _done;
 }
