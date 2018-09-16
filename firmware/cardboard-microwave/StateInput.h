@@ -11,12 +11,13 @@
 class StateInput {
   private:
     boolean _done = false; // is the state done?
-    Keypad _keypad;
+    Keypad* _keypad;
     byte _startButtonPin;
     byte _stopButtonPin;
+    unsigned long previousMillis; // last time called. Needed for button debouncing
 
   public:
-    StateInput(Keypad k, byte startButtonPin, byte stopButtonPin);
+    StateInput(Keypad* k, byte startButtonPin, byte stopButtonPin);
     void Update(unsigned long currentMillis);
 
     /**

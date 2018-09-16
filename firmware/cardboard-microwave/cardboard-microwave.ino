@@ -22,7 +22,6 @@ byte rowPins[rows] = {9, 4, 5, 7}; //connect to the row pinouts of the keypad
 byte colPins[cols] = {8, 10, 6}; //connect to the column pinouts of the keypad
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, rows, cols );
 
-
 // ---------------- Buttons & Interrupts -------------------------
 const byte startButtonPin = 2;
 const byte stopButtonPin = 3;
@@ -37,7 +36,7 @@ Adafruit_7segment clockDisplay = Adafruit_7segment();
 
 // ---------------- States -------------------------
 //StateCooking stateCooking;
-StateInput stateInput(keypad, startButtonPin, stopButtonPin);
+StateInput stateInput(&keypad, startButtonPin, stopButtonPin);
 
 const byte STATE_NONE = 0;
 const byte STATE_INPUT = 1;
@@ -51,11 +50,13 @@ byte state = STATE_NONE; // init starting state
 
 void setup(){
   Serial.begin(9600);
+  delay(100);
+  Serial.println("Setup");
 
   // Timer0 is already used for millis() - we'll just interrupt somewhere
   // in the middle and call the "Compare A" function below
-  //OCR0A = 0xAF;
-  //TIMSK0 |= _BV(OCIE0A);
+  OCR0A = 0xAF;
+  TIMSK0 |= _BV(OCIE0A);
 
   // Init interrupts
   pinMode(startButtonPin, INPUT_PULLUP);
@@ -69,12 +70,11 @@ void setup(){
   //
   state = STATE_INPUT;
   stateInput.start();
+  Serial.println("Setup ended");
   delay(500);
 }
   
 void loop(){
-  
-  
   // Loop is mostly empty. Using TIMER0 to schedule events (see function below)
 }
 
