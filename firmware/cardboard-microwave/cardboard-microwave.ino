@@ -2,12 +2,9 @@
 #include "sounds.h"
 
 #include <Keypad.h> //keypad
-#include <Wire.h>   //adafruit 7-segment
-#include <Adafruit_GFX.h>
-#include "Adafruit_LEDBackpack.h"
-
 //#include "StateCooking.h"
 #include "StateInput.h"
+#include "ClockDisplay.h"
 
 // --------------------- Keypad ------------------------------
 const byte rows = 4; //four rows
@@ -26,13 +23,8 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, rows, cols );
 const byte startButtonPin = 2;
 const byte stopButtonPin = 3;
 
-// --------------------- 7-Segment LED ------------------------------
-// Note - using I2C, pins A4 and A5
-#ifndef _BV
-  #define _BV(bit) (1<<(bit))
-#endif
-
-Adafruit_7segment clockDisplay = Adafruit_7segment();
+// 7 Segment display
+ClockDisplay clockDispaly = ClockDisplay();
 
 // ---------------- States -------------------------
 //StateCooking stateCooking;
@@ -61,11 +53,6 @@ void setup(){
   // Init interrupts
   pinMode(startButtonPin, INPUT_PULLUP);
   pinMode(stopButtonPin, INPUT_PULLUP);
-
-  // Init 7-segment
-  clockDisplay.begin(0x70);  // pass in the address
-  clockDisplay.print(10000, DEC);
-  clockDisplay.writeDisplay();
 
   //
   state = STATE_INPUT;
