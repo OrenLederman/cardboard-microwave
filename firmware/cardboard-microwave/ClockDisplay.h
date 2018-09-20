@@ -19,9 +19,36 @@
 class ClockDisplay {
   private:
     Adafruit_7segment clockDisplay = Adafruit_7segment();
+    int mmss; // time is MM:SS format
 
   public:
     ClockDisplay();
+
+    /**
+     * Initializes the display. Call at setup().
+     */
+    void Init(); 
+
+    /**
+    * Resets the display to --:--
+    */
+    void Reset();
+
+    /**
+    * returns the current time as secons
+    */
+    int getTimeInSeconds();
+
+    /**
+    * Sets MM:SS time based on provided seconds
+    */
+    void setTimeSeconds(int seconds);
+
+    /**
+    * Adds a digit to the time from the right. If the display is full (4 digits),
+    * no change will occure
+    */
+    void AddDigit(int digit);
 };
 
 #endif 

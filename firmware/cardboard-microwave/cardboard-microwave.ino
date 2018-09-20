@@ -54,11 +54,14 @@ void setup(){
   pinMode(startButtonPin, INPUT_PULLUP);
   pinMode(stopButtonPin, INPUT_PULLUP);
 
-  //
+  // Init display
+  clockDispaly.Init();
+
+  // Set initial input
   state = STATE_INPUT;
   stateInput.start();
   Serial.println("Setup ended");
-  delay(500);
+  delay(100);
 }
   
 void loop(){
