@@ -1,28 +1,34 @@
 #include "StateInput.h"
 #include "Arduino.h"
 #include "sounds.h"
+#include "ClockDisplay.h"
 
 #include <PCM.h>
 // Timers based on - https://learn.adafruit.com/multi-tasking-the-arduino-part-2/timers 
 
-StateInput::StateInput(Keypad* k, byte startButtonPin, byte stopButtonPin) :
-    _startButtonPin(startButtonPin), _stopButtonPin(stopButtonPin) 
+StateInput::StateInput(Keypad* k, ClockDisplay* c, byte startButtonPin, byte stopButtonPin)
     {
-      _keypad = k;
+      pKeyboard = k;
+      pClockDisplay = c;
       previousMillis = 0;  
+
+      _startButtonPin = startButtonPin;
+      _stopButtonPin = stopButtonPin;
     };
 
 void StateInput::Update(unsigned long currentMillis)
 {
       // read keypad
     
-    char key = _keypad->getKey();
+    char key = pKeyboard->getKey();
     if ((key != NO_KEY)  && (currentMillis - previousMillis >= 200)){
         previousMillis = currentMillis;  // Remember the time
-        Serial.println(key);
-        //clockDisplay.print(key, DEC);
-        //clockDisplay.writeDisplay();    
+        Serial.println(key);        
         startPlayback(sound_key, sizeof(sound_key));
+        if (key != '*' && key != '#') {
+          int digit = key - '0'; // convert char to digit
+          pClockDisplay->AddDigit(digit);
+        }
     }  
     
     // read buttons
@@ -40,6 +46,7 @@ void StateInput::Update(unsigned long currentMillis)
 
 void StateInput::start() {
     _done = false;
+    pClockDisplay->Reset();
 }
 
 void StateInput::stop() {

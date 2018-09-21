@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include <Keypad.h> //keypad
+#include "ClockDisplay.h"
 
 #ifndef STATE_INPUT_H
 #define STATE_INPUT_H
@@ -11,13 +12,15 @@
 class StateInput {
   private:
     boolean _done = false; // is the state done?
-    Keypad* _keypad;
+    Keypad* pKeyboard;
+    ClockDisplay* pClockDisplay;
+    
     byte _startButtonPin;
     byte _stopButtonPin;
     unsigned long previousMillis; // last time called. Needed for button debouncing
 
   public:
-    StateInput(Keypad* k, byte startButtonPin, byte stopButtonPin);
+    StateInput(Keypad* k, ClockDisplay* c, byte startButtonPin, byte stopButtonPin);
     void Update(unsigned long currentMillis);
 
     /**

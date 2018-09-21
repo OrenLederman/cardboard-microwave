@@ -34,14 +34,17 @@ void ClockDisplay::setTimeSeconds(int seconds)
   int ss = seconds % 60;
   mmss = mm*100 + ss;
   clockDisplay.print(mmss, DEC);
+  clockDisplay.drawColon(true);  
   clockDisplay.writeDisplay();  
 }
 
 void ClockDisplay::AddDigit(int digit)
 {
-  if (mmss < 10000) {
+  if (mmss < 1000) {
     mmss = (mmss * 10) + digit;
+     Serial.println(mmss);
     clockDisplay.print(mmss, DEC);
+    clockDisplay.drawColon(true);    
     clockDisplay.writeDisplay();  
   }
 }

@@ -28,7 +28,7 @@ ClockDisplay clockDispaly = ClockDisplay();
 
 // ---------------- States -------------------------
 //StateCooking stateCooking;
-StateInput stateInput(&keypad, startButtonPin, stopButtonPin);
+StateInput stateInput(&keypad, &clockDispaly, startButtonPin, stopButtonPin);
 
 const byte STATE_NONE = 0;
 const byte STATE_INPUT = 1;
