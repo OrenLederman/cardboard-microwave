@@ -4,6 +4,7 @@
 
 ClockDisplay::ClockDisplay()
 {
+  previousMillis = 0;
 };
 
 void ClockDisplay::Init()
@@ -42,10 +43,18 @@ void ClockDisplay::AddDigit(int digit)
 {
   if (mmss < 1000) {
     mmss = (mmss * 10) + digit;
-     Serial.println(mmss);
+    Serial.println(mmss);
     clockDisplay.print(mmss, DEC);
     clockDisplay.drawColon(true);    
     clockDisplay.writeDisplay();  
   }
 }
 
+void ClockDisplay::Update(unsigned long currentMillis)
+{
+  if((currentMillis - previousMillis) > updateInterval)  // time to update
+  {
+    previousMillis = millis();
+    
+  }
+}

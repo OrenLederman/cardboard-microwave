@@ -10,10 +10,10 @@
 const byte rows = 4; //four rows
 const byte cols = 3; //three columns
 char keys[rows][cols] = {
-  {'1','2','3'},
-  {'4','5','6'},
-  {'7','8','9'},
-  {'*','0','H'}
+  {'1', '2', '3'},
+  {'4', '5', '6'},
+  {'7', '8', '9'},
+  {'*', '0', 'H'}
 };
 byte rowPins[rows] = {9, 4, 5, 7}; //connect to the row pinouts of the keypad
 byte colPins[cols] = {8, 10, 6}; //connect to the column pinouts of the keypad
@@ -40,7 +40,7 @@ byte state = STATE_NONE; // init starting state
 
 // ---------------- Init and main loop -------------------------
 
-void setup(){
+void setup() {
   Serial.begin(9600);
   delay(100);
   Serial.println("Setup");
@@ -63,16 +63,16 @@ void setup(){
   Serial.println("Setup ended");
   delay(100);
 }
-  
-void loop(){
+
+void loop() {
   // Loop is mostly empty. Using TIMER0 to schedule events (see function below)
 }
 
 // ----------------- Sleep and wake up-----------------
 void sleep() {
   //TODO-only enable interrupts when going to sleep
-  //attachInterrupt(digitalPinToInterrupt(startButtonPin), wakeup, CHANGE);  
-  //attachInterrupt(digitalPinToInterrupt(stopButtonPin), wakeup, CHANGE);  
+  //attachInterrupt(digitalPinToInterrupt(startButtonPin), wakeup, CHANGE);
+  //attachInterrupt(digitalPinToInterrupt(stopButtonPin), wakeup, CHANGE);
 }
 
 
@@ -81,13 +81,13 @@ void wakeup() {
 }
 
 // ----------------- Timer -----------------
-// Interrupt is called once a millisecond. See - https://learn.adafruit.com/multi-tasking-the-arduino-part-2/timers 
-SIGNAL(TIMER0_COMPA_vect) 
+// Interrupt is called once a millisecond. See - https://learn.adafruit.com/multi-tasking-the-arduino-part-2/timers
+SIGNAL(TIMER0_COMPA_vect)
 {
   unsigned long currentMillis = millis();
 
   //call states (based on which state is on now)
-  switch(state) {
+  switch (state) {
     case STATE_INPUT:
       stateInput.Update(currentMillis);
       break;
@@ -96,6 +96,6 @@ SIGNAL(TIMER0_COMPA_vect)
       break;
     default:
       Serial.println("No state?");
-  }  
+  }
 }
 
