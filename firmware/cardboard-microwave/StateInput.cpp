@@ -25,7 +25,7 @@ void StateInput::Update(unsigned long currentMillis)
         previousMillis = currentMillis;  // Remember the time
         Serial.println(key);        
         startPlayback(sound_key, sizeof(sound_key));
-        if (key != '*' && key != '#') {
+        if (key != '*' && key != 'H') {
           int digit = key - '0'; // convert char to digit
           pClockDisplay->AddDigit(digit);
         }

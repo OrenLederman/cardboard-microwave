@@ -39,16 +39,12 @@ byte state = STATE_NONE; // init starting state
 
 
 // ---------------- Init and main loop -------------------------
+unsigned long currentMillis = millis();
 
 void setup() {
   Serial.begin(9600);
   delay(100);
   Serial.println("Setup");
-
-  // Timer0 is already used for millis() - we'll just interrupt somewhere
-  // in the middle and call the "Compare A" function below
-  OCR0A = 0xAF;
-  TIMSK0 |= _BV(OCIE0A);
 
   // Init interrupts
   pinMode(startButtonPin, INPUT_PULLUP);
@@ -62,10 +58,32 @@ void setup() {
   stateInput.start();
   Serial.println("Setup ended");
   delay(100);
+
+  // TODO - fix timer. There's a problem with calling long operations from the timer...
+  // Setup timer
+  // Timer0 is already used for millis() - we'll just interrupt somewhere
+  // in the middle and call the "Compare A" function below
+  //OCR0A = 0xAF;
+  //TIMSK0 |= _BV(OCIE0A);
 }
 
 void loop() {
-  // Loop is mostly empty. Using TIMER0 to schedule events (see function below)
+   currentMillis = millis();
+
+  //call states (based on which state is on now)
+  switch (state) {
+    case STATE_INPUT:
+      stateInput.Update(currentMillis);
+      break;
+    case STATE_COOKING:
+      //stateCooking.Update(currentMillis);
+      break;
+    default:
+      Serial.println("No state?");
+  }
+
+  //Always update the display
+  clockDispaly.Update(currentMillis);
 }
 
 // ----------------- Sleep and wake up-----------------
@@ -84,18 +102,5 @@ void wakeup() {
 // Interrupt is called once a millisecond. See - https://learn.adafruit.com/multi-tasking-the-arduino-part-2/timers
 SIGNAL(TIMER0_COMPA_vect)
 {
-  unsigned long currentMillis = millis();
-
-  //call states (based on which state is on now)
-  switch (state) {
-    case STATE_INPUT:
-      stateInput.Update(currentMillis);
-      break;
-    case STATE_COOKING:
-      //stateCooking.Update(currentMillis);
-      break;
-    default:
-      Serial.println("No state?");
-  }
 }
 

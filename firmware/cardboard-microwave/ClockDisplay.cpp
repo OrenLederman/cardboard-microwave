@@ -16,10 +16,7 @@ void ClockDisplay::Init()
 
 void ClockDisplay::Reset()
 {
-  clockDisplay.print(10000, DEC);
-  clockDisplay.drawColon(true);
-  clockDisplay.writeDisplay();
-  mmss = 0;
+  mmss = DISPLAY_EMPTY_VALUE;
 };
 
 int ClockDisplay::getTimeInSeconds()
@@ -33,20 +30,19 @@ void ClockDisplay::setTimeSeconds(int seconds)
 {
   int mm = seconds / 60;
   int ss = seconds % 60;
-  mmss = mm*100 + ss;
-  clockDisplay.print(mmss, DEC);
-  clockDisplay.drawColon(true);  
-  clockDisplay.writeDisplay();  
+  mmss = mm*100 + ss;  
 }
 
 void ClockDisplay::AddDigit(int digit)
 {
+  if (mmss == DISPLAY_EMPTY_VALUE)
+  {
+    mmss = 0;  
+  }
+  
   if (mmss < 1000) {
     mmss = (mmss * 10) + digit;
     Serial.println(mmss);
-    clockDisplay.print(mmss, DEC);
-    clockDisplay.drawColon(true);    
-    clockDisplay.writeDisplay();  
   }
 }
 
@@ -55,6 +51,8 @@ void ClockDisplay::Update(unsigned long currentMillis)
   if((currentMillis - previousMillis) > updateInterval)  // time to update
   {
     previousMillis = millis();
-    
+    clockDisplay.print(mmss, DEC);
+    clockDisplay.drawColon(true);    
+    clockDisplay.writeDisplay();      
   }
 }

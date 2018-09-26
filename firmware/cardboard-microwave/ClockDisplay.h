@@ -13,7 +13,8 @@
 #ifndef CLOCK_DISPLAY_H
 #define CLOCK_DISPLAY_H
 
-const int DISPLAY_UPDATE_INTERVAL_MS = 200;
+const int DISPLAY_UPDATE_INTERVAL_MS = 100;
+const int DISPLAY_EMPTY_VALUE = 10000;
 
 /**
  * This class the clock display
@@ -23,7 +24,7 @@ class ClockDisplay {
     unsigned long previousMillis;    // will store last time display was updated
     int  updateInterval = DISPLAY_UPDATE_INTERVAL_MS;      // interval between updates
     Adafruit_7segment clockDisplay = Adafruit_7segment();
-    int mmss; // time is MM:SS format
+    int mmss = DISPLAY_EMPTY_VALUE; // time is MM:SS format
 
   public:
     ClockDisplay();
