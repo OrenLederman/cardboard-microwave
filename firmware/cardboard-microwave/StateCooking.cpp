@@ -90,7 +90,7 @@ void StateCooking::start(int ticksRemaining) {
     _done = false;
 }
 
-void StateCooking::stop() {
+void StateCooking::done() {
     cdown.setTicksRemaining(0);
     cookingMusicRepeat.stopMusic();
     _done = true;    

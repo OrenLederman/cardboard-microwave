@@ -37,9 +37,17 @@ void StateInput::Update(unsigned long currentMillis)
 
     // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
     if ((startButtonState == LOW || stopButtonState == LOW) && (currentMillis - previousMillis >= 200)) {
-        previousMillis = currentMillis;  // Remember the time
-        Serial.println("Hi!");  
+        previousMillis = currentMillis;  // Remember the time, basic debounce
         startPlayback(sound_key, sizeof(sound_key));
+        
+        if (startButtonState == LOW) {
+          this->done();
+        }
+
+        if (stopButtonState == LOW) {
+          this->start();
+        }
+
     } else {
     }
 };
@@ -49,7 +57,7 @@ void StateInput::start() {
     pClockDisplay->Reset();
 }
 
-void StateInput::stop() {
+void StateInput::done() {
     _done = true;    
 }
 

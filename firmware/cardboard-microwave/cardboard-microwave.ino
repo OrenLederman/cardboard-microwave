@@ -74,9 +74,11 @@ void loop() {
   switch (state) {
     case STATE_INPUT:
       stateInput.Update(currentMillis);
+      if (stateInput.isDone()) state = STATE_COOKING;
       break;
     case STATE_COOKING:
       //stateCooking.Update(currentMillis);
+      //if (stateCooking.isDone()) state = STATE_INPUT;
       break;
     default:
       Serial.println("No state?");

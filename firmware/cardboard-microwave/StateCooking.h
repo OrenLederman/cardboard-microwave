@@ -91,7 +91,7 @@ class StateCooking {
     /**
      * This method ends the state
      */
-    void stop();
+    void done();
 
     /**
      * Is the state finished executing?
