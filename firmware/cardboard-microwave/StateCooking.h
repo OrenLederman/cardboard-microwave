@@ -6,8 +6,8 @@
 #include "ClockDisplay.h"
 
 const int TICK_LENGTH_MS = 200; // each tick is 200ms, instead of a full second
-const int NUMBER_OF_COMPLETE_BEEPS = 4;
-const long TIME_BETWEEN_COMPLETE_BEEPS_MS = 500; // when playing complete sound
+const int NUMBER_OF_COMPLETE_BEEPS = 3;
+const long TIME_BETWEEN_COMPLETE_BEEPS_MS = 800; // when playing complete sound
                                                  // how long to wait in between
 
 /**
