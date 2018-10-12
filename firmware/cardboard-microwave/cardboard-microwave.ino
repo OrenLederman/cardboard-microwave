@@ -2,7 +2,7 @@
 #include "sounds.h"
 
 #include <Keypad.h> //keypad
-//#include "StateCooking.h"
+#include "StateCooking.h"
 #include "StateInput.h"
 #include "ClockDisplay.h"
 
@@ -27,7 +27,7 @@ const byte stopButtonPin = 3;
 ClockDisplay clockDispaly = ClockDisplay();
 
 // ---------------- States -------------------------
-//StateCooking stateCooking;
+StateCooking stateCooking(&clockDispaly, stopButtonPin);
 StateInput stateInput(&keypad, &clockDispaly, startButtonPin, stopButtonPin);
 
 const byte STATE_NONE = 0;
@@ -74,11 +74,19 @@ void loop() {
   switch (state) {
     case STATE_INPUT:
       stateInput.Update(currentMillis);
-      if (stateInput.isDone()) state = STATE_COOKING;
+      if (stateInput.isDone()) 
+      {
+        state = STATE_COOKING;
+        stateCooking.start();
+      }
       break;
     case STATE_COOKING:
-      //stateCooking.Update(currentMillis);
-      //if (stateCooking.isDone()) state = STATE_INPUT;
+      stateCooking.Update(currentMillis);
+      if (stateCooking.isDone())
+      {
+        state = STATE_INPUT;
+        stateInput.start();
+      }
       break;
     default:
       Serial.println("No state?");

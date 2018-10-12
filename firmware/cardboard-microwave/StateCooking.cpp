@@ -61,13 +61,17 @@ void CookingMusicRepeat::stopMusic()
     stopPlayback();
 };
 
-StateCooking::StateCooking() {};
+StateCooking::StateCooking(ClockDisplay* c, byte stopButtonPin)
+{
+   pClockDisplay = c;
+   _stopButtonPin = stopButtonPin;
+}
 
 void StateCooking::Update(unsigned long currentMillis)
 {
     cdown.Update(currentMillis);
     cookingMusicRepeat.Update(currentMillis);    
-  
+    pClockDisplay->setTimeSeconds(cdown.getTicksRemaining());
 
     // when countdown is over, stop music, beep X times, and end state
     if (cdown.getTicksRemaining() == 0) 
@@ -76,7 +80,8 @@ void StateCooking::Update(unsigned long currentMillis)
           
         // beep x times
         for (int i=0; i <  NUMBER_OF_COMPLETE_BEEPS; i++) {
-            startPlayback(sound_cooking, sizeof(sound_complete));
+            Serial.println("Beep..");
+            startPlayback(sound_complete, sizeof(sound_complete));
             delay(TIME_BETWEEN_COMPLETE_BEEPS_MS);
         }
 
@@ -84,7 +89,8 @@ void StateCooking::Update(unsigned long currentMillis)
     }
 };
 
-void StateCooking::start(int ticksRemaining) {
+void StateCooking::start() {
+    int ticksRemaining = pClockDisplay->getTimeInSeconds();
     cdown.setTicksRemaining(ticksRemaining);
     cookingMusicRepeat.startMusic();
     _done = false;

@@ -3,6 +3,8 @@
 #ifndef STATE_COOKING_H
 #define STATE_COOKING_H
 
+#include "ClockDisplay.h"
+
 const int TICK_LENGTH_MS = 200; // each tick is 200ms, instead of a full second
 const int NUMBER_OF_COMPLETE_BEEPS = 4;
 const long TIME_BETWEEN_COMPLETE_BEEPS_MS = 500; // when playing complete sound
@@ -78,15 +80,18 @@ class StateCooking {
     Countdown cdown;
     CookingMusicRepeat cookingMusicRepeat;
     boolean _done = false; // is the state done?
+    
+    ClockDisplay* pClockDisplay;
+    byte _stopButtonPin;
 
   public:
-    StateCooking();
+    StateCooking(ClockDisplay* c, byte stopButtonPin);
     void Update(unsigned long currentMillis);
 
     /**
      * This method resets the reminaing time and starts the state
      */
-    void start(int ticksRemaining);
+    void start();
 
     /**
      * This method ends the state
