@@ -77,7 +77,10 @@ void StateCooking::Update(unsigned long currentMillis)
     if (cdown.getTicksRemaining() == 0) 
     {
         cookingMusicRepeat.stopMusic();
-          
+        // delay, let the display refresh
+        delay(150);
+        pClockDisplay->Update(currentMillis+150);
+                
         // beep x times
         for (int i=0; i <  NUMBER_OF_COMPLETE_BEEPS; i++) {
             Serial.println("Beep..");

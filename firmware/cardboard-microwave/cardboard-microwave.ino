@@ -68,13 +68,13 @@ void setup() {
 }
 
 void loop() {
-   currentMillis = millis();
+  currentMillis = millis();
 
   //call states (based on which state is on now)
   switch (state) {
     case STATE_INPUT:
       stateInput.Update(currentMillis);
-      if (stateInput.isDone()) 
+      if (stateInput.isDone())
       {
         state = STATE_COOKING;
         stateCooking.start();
