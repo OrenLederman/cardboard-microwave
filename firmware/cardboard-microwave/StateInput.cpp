@@ -35,7 +35,7 @@ void StateInput::Update(unsigned long currentMillis)
     int startButtonState = digitalRead(_startButtonPin);
     int stopButtonState = digitalRead(_stopButtonPin);
 
-    // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+    // check if the pushbutton is pressed. If it is, the buttonState is Low:
     if ((startButtonState == LOW || stopButtonState == LOW) && (currentMillis - previousMillis >= 200)) {
         previousMillis = currentMillis;  // Remember the time, basic debounce
         startPlayback(sound_key, sizeof(sound_key));

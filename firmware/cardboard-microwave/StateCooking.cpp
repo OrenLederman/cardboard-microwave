@@ -73,6 +73,15 @@ void StateCooking::Update(unsigned long currentMillis)
     cookingMusicRepeat.Update(currentMillis);    
     pClockDisplay->setTimeSeconds(cdown.getTicksRemaining());
 
+    // if stop button is pressed, stop
+    int stopButtonState = digitalRead(_stopButtonPin);
+    if (stopButtonState == LOW) {
+        this->done();      
+        startPlayback(sound_key, sizeof(sound_key));
+        delay(sizeof(sound_key)/8000);
+    }
+
+
     // when countdown is over, stop music, beep X times, and end state
     if (cdown.getTicksRemaining() == 0) 
     {
